@@ -268,7 +268,7 @@ def all_spread_out_cases(the_mad_output):
                 list_of_reflect.append(tuple(i[k]))
             output_dic['A'] = list_of_reflect
         else:
-            output_dic['B'] = []
+            output_dic['A'] = []
         # put the dicts into the output_list, which is 
         # the return value
         output_list.append(output_dic)
