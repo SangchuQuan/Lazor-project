@@ -238,7 +238,6 @@ def all_spread_out_cases(the_mad_output):
             if j == 5:
                 exsited_illegal.append([j, i])
                 illegal_position_list.append([j, i])
-                print([j, i])
     # Read the return value from read_bff, which gives
     # the number of each types of blocks. And the 
     # illegal positions.
