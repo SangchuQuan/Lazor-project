@@ -1,3 +1,9 @@
+'''
+Author: Honglin Shi and Sangchu Quan
+Honglin shi finished the read_bff function
+Sangchu Quan finished the output_solution function
+We cooperate to finish the rest of the project.
+'''
 import re
 
 
@@ -310,7 +316,7 @@ def check_answer(points_position, PATH):
 
 
 if __name__ == '__main__':
-    filename = 'mad_1'
+    filename = input('Please enter the filename you want to solve: ')
     Read = read_bff(filename)
     GRID = Read[0]
     blocks = Read[1]
