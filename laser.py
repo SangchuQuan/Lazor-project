@@ -452,17 +452,20 @@ def check_answer(points_position, PATH):
 
     '''
 
-    times = 0
-    for i in points_position:
-        # print('i',i)
-        for j in PATH:
-            # print('j',j)
-            if i in j:
-                times += 1
-    if len(points_position) == times:
-        return True
+    if len(PATH) == 1:
+        if set(points_position) <= set(PATH[0]):
+            return True
+        else:
+            return False
     else:
-        return False
+        for i in points_position:
+            for j in PATH:
+                if i in j:
+                    points_position.remove(i)
+        if len(points_position) == 0:
+            return True
+        else:
+            return False
     
 def output_solution(answer, GRID, filename):
     for i in answer['A']:
