@@ -5,6 +5,7 @@ Sangchu Quan finished the output_solution function
 We cooperate to finish the rest of the project.
 '''
 import re
+import itertools
 
 
 def read_bff(filename):
@@ -459,11 +460,13 @@ def output_solution(answer, GRID, filename):
                 GRID[o][p] = 'B'
             elif GRID[o][p] == 4:
                 GRID[o][p] = 'C'
+            elif GRID[o][p] == 5:
+            	GRID[o][p] = 'x'
     solution = open(filename + ' solution.txt', 'w')
     text = 'The solution for ' + filename + ' is: \n'
     solution.write(text)
     for q in GRID:
-        text = " ".join(str(q))
+        text = " ".join(q)
         solution.write(text + '\n')
     solution.close
     
