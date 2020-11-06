@@ -13,4 +13,4 @@ It will also store the information of lasers and other points for later use. The
 After that, the code will combine every information and simulate whether laser can pass all target points in one arrangement. When meeting the right arrangement, it will
 recognize it and output a solution txt file.
 
-##### Author: Honglin Shi, Sangchu Quan
+##### Author: Honglin Shi hshi24@jh.edu, Sangchu Quan squan4@jh.edu
