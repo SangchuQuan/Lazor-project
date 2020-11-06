@@ -8,6 +8,24 @@ import re
 import itertools
 
 class where_to_move():
+    
+    '''
+    This is a class for changing lasor position for the lasor 
+    meets reflect and refract blocks.
+    
+    **Parameters**
+        Flag: *str*
+            This str element is the signal for where
+            the lasor would go. Up, Down, Left and Right.
+        x_direction: *int*
+            This is the lasor's x direction before changing.
+        y_direction: *int*
+            This is the lasor's y direction before changing.
+            
+    **Returns**
+        (new_x_direction, new_y_direction): *tuple*
+            This is the new direction after changing.
+    '''
 
     def __init__(self, Flag, x_direction, y_direction):
         self.Flag = Flag
@@ -228,6 +246,8 @@ def all_spread_out_cases(the_mad_output):
         for j in the_mad_output[0][i]:
             if j == 3:
                 exsited_opaque.append([j, i])
+                # each exsiting block is an impossible
+                # position for assigning new blocks.
                 illegal_position_list.append([j, i])
             if j == 2:
                 exsited_reflect.append([j, i])
@@ -238,6 +258,7 @@ def all_spread_out_cases(the_mad_output):
             if j == 5:
                 exsited_illegal.append([j, i])
                 illegal_position_list.append([j, i])
+                print([j, i])
     # Read the return value from read_bff, which gives
     # the number of each types of blocks. And the 
     # illegal positions.
@@ -452,20 +473,17 @@ def check_answer(points_position, PATH):
 
     '''
 
-    if len(PATH) == 1:
-        if set(points_position) <= set(PATH[0]):
-            return True
-        else:
-            return False
+    times = 0
+    for i in points_position:
+        # print('i',i)
+        for j in PATH:
+            # print('j',j)
+            if i in j:
+                times += 1
+    if len(points_position) == times:
+        return True
     else:
-        for i in points_position:
-            for j in PATH:
-                if i in j:
-                    points_position.remove(i)
-        if len(points_position) == 0:
-            return True
-        else:
-            return False
+        return False
     
 def output_solution(answer, GRID, filename):
     for i in answer['A']:
