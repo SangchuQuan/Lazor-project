@@ -195,6 +195,21 @@ def all_spread_out_cases(the_mad_output):
     # Prepare the output list and dict in the list.
     output_list = []
     output_dic = {}
+    # At this time i j is inverse as the output txt
+    for i in range(0, len(the_mad_output[0]) - 1):
+        for j in the_mad_output[0][i]:
+            if j == 3:
+                exsited_opaque.append([j, i])
+                illegal_position_list.append([j, i])
+            if j == 2:
+                exsited_reflect.append([j, i])
+                illegal_position_list.append([j, i])
+            if j == 4:
+                exsited_refract.append([j, i])
+                illegal_position_list.append([j, i])
+            if j == 5:
+                exsited_illegal.append([j, i])
+                illegal_position_list.append([j, i])
     # Read the return value from read_bff, which gives
     # the number of each types of blocks. And the 
     # illegal positions.
@@ -251,25 +266,28 @@ def all_spread_out_cases(the_mad_output):
                 # of block, which is the value in the 
                 # output_dic
                 list_of_opaque.append(tuple(i[k]))
+            list_of_opaque.extend(exsited_opaque)
             output_dic['B'] = list_of_opaque
         else:
-            output_dic['B'] = []
+            output_dic['B'] = exsited_opaque[:]
         if refract_block_num >= 1:
             list_of_refract = []
             # Do not go beyond the length of len(i)
             for k in range(opaque_block_num, refract_block_num + opaque_block_num):
                 list_of_refract.append(tuple(i[k]))
+            list_of_refract.extend(exsited_refract)
             output_dic['C'] = list_of_refract
         else:
-            output_dic['C'] = []
+            output_dic['C'] = exsited_refract[:]
         if reflect_block_num >= 1:
             list_of_reflect = []
             # Do not go beyond the length of len(i)
             for k in range(refract_block_num + opaque_block_num, reflect_block_num + refract_block_num + opaque_block_num):
                 list_of_reflect.append(tuple(i[k]))
+            list_of_reflect.extend(exsited_reflect)
             output_dic['A'] = list_of_reflect
         else:
-            output_dic['A'] = []
+            output_dic['A'] = exsited_reflect[:]
         # put the dicts into the output_list, which is 
         # the return value
         output_list.append(output_dic)
