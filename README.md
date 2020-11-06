@@ -4,8 +4,8 @@ The goal of this project is to use python automatically solve the lazor game in 
 
 ## How to use
 1. Download this 'laser.py' file and make sure that all bff files in the same folder.
-2. Deside which puzzle you want to solve and manually change the filename in the "if __name__ == '__main__'" part
-3. Run the python file and you will get a txt fill showing the solution
+2. Deside which puzzle you want to solve and run the python file to enter the file name of puzzle
+3. You will get a txt file showing the solution automatically.
 
 ## Idea of our project:
 Firstly, we need to read the bff files and extract the information we need. Our code will read bff files and creat a list to represent the layout of blocks. 
