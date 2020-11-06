@@ -223,6 +223,7 @@ def all_spread_out_cases(the_mad_output):
     # Prepare the output list and dict in the list.
     output_list = []
     output_dic = {}
+    # Read the existing blocks.
     for i in range(0, len(the_mad_output[0]) - 1):
         for j in the_mad_output[0][i]:
             if j == 3:
@@ -395,25 +396,15 @@ def laser_path(laser_position, laser_direction, x_dimension, y_dimension, blocks
         if block in blocks['B']:
             return path
         elif block in blocks['A']:
-            # print(x)
-            # print(y)
-            # print(d_x)
-            # print(d_y)
-            if flag == 'L' or flag == 'R':
-                d_x = -1 * d_x
-                d_y = d_y
-            if flag == 'U' or flag == 'D':
-                d_x = d_x
-                d_y = -1 * d_y
+            reflect_move = where_to_move(flag, d_x, d_y)
+            d_x = where_to_move(flag, d_x, d_y).__reflect__()[0]
+            d_y = where_to_move(flag, d_x, d_y).__reflect__()[1]
         elif block in blocks['C']:
             path_after_refract = laser_path(
                 (x + d_x, y + d_y), (d_x, d_y), x_dimension, y_dimension, blocks)
-            if flag == 'L' or flag == 'R':
-                d_x = -1 * d_x
-                d_y = d_y
-            if flag == 'U' or flag == 'D':
-                d_x = d_x
-                d_y = -1 * d_y
+            refract_move = where_to_move(flag, d_x, d_y)
+            d_x = where_to_move(flag, d_x, d_y).__refract__()[0]
+            d_y = where_to_move(flag, d_x, d_y).__refract__()[1]
 
         # calculate the next laser and block coordinates.
         x = x + d_x
