@@ -469,7 +469,7 @@ def output_solution(answer, GRID, filename):
     
     
 if __name__ == '__main__':
-    filename = 'mad_1'
+    filename = input('Please enter the filename you want to solve: ')
     Read = read_bff(filename)
     GRID = Read[0]
     blocks = Read[1]
