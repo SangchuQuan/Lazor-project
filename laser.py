@@ -160,6 +160,119 @@ def pos_chk(x, y, x_dimension, y_dimension):
     if x > 0 and x < x_dimension and y > 0 and y < y_dimension:
         return True
 
+def all_spread_out_cases(the_mad_output):
+    '''
+    This Function is to generate all the possible but not same cases of
+    positions for all required blocks, including illegal position of 
+    blocks.
+    
+    **Parameters**
+
+        the_mad_out_put: *dict*
+            A return value of read_bff, which contains required
+            number of blocks. And number of each type of blocks.
+
+    **Returns**
+
+        valid: *list*
+            Return a list containing each possible blocks position
+            combinations, which is saved as dict. So this is a list
+            of many dicts.
+    '''
+    point_list = the_mad_output[0]
+    # Give the initial value of numbers of blocks.
+    reflect_block_num = 0
+    refract_block_num = 0
+    opaque_block_num = 0
+    illegal_position_num = 0
+    # Set up each lists for each type of blocks.
+    reflect_block_list = []
+    refract_block_list = []
+    opaque_block_list = []
+    illegal_position_list = []
+    all_block_list = []
+    # Prepare the output list and dict in the list.
+    output_list = []
+    output_dic = {}
+    # Read the return value from read_bff, which gives
+    # the number of each types of blocks. And the 
+    # illegal positions.
+    for i in the_mad_output[1].keys():
+        k = 0
+        if i == 'A':
+            reflect_block_num = the_mad_output[1]['A'] + reflect_block_num
+            while k < reflect_block_num:
+                reflect_block_list.append([1, 1])
+                all_block_list.append([1, 1])
+                k += 1
+        elif i == 'C':
+            refract_block_num = the_mad_output[1]['C'] + refract_block_num
+            while k < refract_block_num:
+                refract_block_list.append([1, 1])
+                all_block_list.append([1, 1])
+                k += 1
+        elif i == 'B':
+            opaque_block_num = the_mad_output[1]['B'] + opaque_block_num
+            while k < opaque_block_num:
+                opaque_block_list.append([1, 1])
+                all_block_list.append([1, 1])
+                k += 1
+        elif i == 'x':
+            illegal_position_num += 1
+            while k < illegal_position_num:
+                illegal_position_list.append([1, 1])
+                k += 1
+    # Specify where is the boundary of the grid
+    x_dimension = len(the_mad_output[0][0])
+    y_dimension = len(the_mad_output[0])
+    reflect_block_list.append([1, 1])
+    # A list containg all the coordinate of the grid.
+    alist = []
+    # fill the list.
+    for i in range(1, x_dimension - 1, 2):
+        for j in range(1, y_dimension - 1, 2):
+            alist.append([i, j])
+            # Remove the illegal position.
+            for k in illegal_position_list:
+                if [i, j] == k:
+                    alist.remove([i, j])
+    # Do the combination for x times, where x is the number
+    # of all the required blocks. Pick up value from 
+    # coordinate list, and make combination for which one
+    # is reflect and which one is refract and so on.
+    for i in itertools.permutations(alist, len(all_block_list)):
+        output_dic = {}
+        if opaque_block_num >= 1:
+            list_of_opaque = []
+            # Do not go beyond the length of len(i)
+            for k in range(0, opaque_block_num):
+                # make a list of the specified type
+                # of block, which is the value in the 
+                # output_dic
+                list_of_opaque.append(tuple(i[k]))
+            output_dic['B'] = list_of_opaque
+        else:
+            output_dic['B'] = []
+        if refract_block_num >= 1:
+            list_of_refract = []
+            # Do not go beyond the length of len(i)
+            for k in range(opaque_block_num, refract_block_num + opaque_block_num):
+                list_of_refract.append(tuple(i[k]))
+            output_dic['C'] = list_of_refract
+        else:
+            output_dic['C'] = []
+        if reflect_block_num >= 1:
+            list_of_reflect = []
+            # Do not go beyond the length of len(i)
+            for k in range(refract_block_num + opaque_block_num, reflect_block_num + refract_block_num + opaque_block_num):
+                list_of_reflect.append(tuple(i[k]))
+            output_dic['A'] = list_of_reflect
+        else:
+            output_dic['B'] = []
+        # put the dicts into the output_list, which is 
+        # the return value
+        output_list.append(output_dic)
+    return output_list
 
 def laser_path(laser_position, laser_direction, x_dimension, y_dimension, blocks):
     '''
@@ -313,31 +426,71 @@ def check_answer(points_position, PATH):
         return True
     else:
         return False
-
-
+    
+def output_solution(answer, GRID, filename):
+    for i in answer['A']:
+        x = i[0]
+        y = i[1]
+        GRID[y][x] = 2
+    for j in answer['B']:
+        x = j[0]
+        y = j[1]
+        GRID[y][x] = 3
+    for k in answer['C']:
+        x = k[0]
+        y = k[1]
+        GRID[y][x] = 4
+    for m in GRID:
+        if 1 in m:
+            continue
+        else:
+            GRID.remove(m)
+    for n in GRID:
+        for o in n:
+            if o == 0:
+                n.remove(o)
+    for o in range(len(GRID)):
+        for p in range(len(GRID[o])):
+            if GRID[o][p] == 1:
+                GRID[o][p] = 'o'
+            elif GRID[o][p] == 2:
+                GRID[o][p] = 'A'
+            elif GRID[o][p] == 3:
+                GRID[o][p] = 'B'
+            elif GRID[o][p] == 4:
+                GRID[o][p] = 'C'
+    solution = open(filename + ' solution.txt', 'w')
+    text = 'The solution for ' + filename + ' is: \n'
+    solution.write(text)
+    for q in GRID:
+        text = " ".join(str(q))
+        solution.write(text + '\n')
+    solution.close
+    
+    
 if __name__ == '__main__':
-    filename = input('Please enter the filename you want to solve: ')
+    filename = 'mad_1'
     Read = read_bff(filename)
     GRID = Read[0]
     blocks = Read[1]
     lasers = Read[2]
     points_position = Read[3]
-
-    blocks = {}
-    blocks['A'] = [(1, 5), (7, 3)]
-    blocks['B'] = []
-    blocks['C'] = [(5, 1)]
-    PATH = []
-    for j in range(len(lasers['position'])):
-        laser_position = lasers['position'][j]
-        laser_direction = lasers['direction'][j]
-        # print(laser_position)
-        x_dimension = len(GRID[0]) - 1
-        y_dimension = len(GRID) - 1
-        # print(y_dimension)
-        path = laser_path(laser_position, laser_direction,
-                          x_dimension, y_dimension, blocks)
-        PATH.append(path)
-    print(check_answer(points_position, PATH))
-    if check_answer(points_position, PATH) is True:
-        answer = blocks
+    for i in all_spread_out_cases(Read):
+        blocks = i
+        PATH = []
+        for j in range(len(lasers['position'])):
+            laser_position = lasers['position'][j]
+            laser_direction = lasers['direction'][j]
+            # print(laser_position)
+            x_dimension = len(GRID[0]) - 1
+            y_dimension = len(GRID) - 1
+            # print(y_dimension)
+            path = laser_path(laser_position, laser_direction,
+                              x_dimension, y_dimension, blocks)
+            PATH.append(path)
+        # print(PATH)
+        #print(check_answer(points_position, PATH))
+        if check_answer(points_position, PATH) is True:
+            answer = blocks
+            output_solution(answer, GRID, filename)
+            break
